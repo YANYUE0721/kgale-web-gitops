@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kgale-web-gitops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kgale-web-gitops
+  template:
+    metadata:
+      labels:
+        app: kgale-web-gitops
+    spec:
+      nodeName: k8s-master              # 指定运行到 k8s-master 节点
+      tolerations:
+      - operator: "Exists"              # 容忍 Taint（污点）
+      containers:
+      - name: kgale-web                 # Container（容器）名称
+        image: 172.16.11.142/library/kgale-web:v1  # Harbor（私有镜像仓库）镜像
+        ports:
+        - containerPort: 80             # 容器内部端口
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kgale-web-gitops-svc
+spec:
+  type: NodePort                        # NodePort（节点端口）暴露
+  selector:
+    app: kgale-web-gitops
+  ports:
+  - port: 80                            # Service（服务）端口
+    targetPort: 80                      # Pod（容器组）端口
+    nodePort: 30084                     # 外部访问端口
