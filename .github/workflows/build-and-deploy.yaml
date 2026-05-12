@@ -32,7 +32,7 @@ jobs:
 
       - name: Update Kubernetes YAML image
         run: |
-          sed -i "s#image: 172.16.11.142/library/kgale-web:.*#image: ${IMAGE_NAME}  # Harbor（私有镜像仓库）镜像#g" kgale-web-gitops.yaml
+          sed -i "s#^[[:space:]]*image: 172.16.11.142/library/kgale-web:.*#        image: ${IMAGE_NAME}#g" kgale-web-gitops.yaml
 
       - name: Commit and push updated YAML
         run: |
