@@ -1,0 +1,18 @@
+﻿apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kgale-web-ingress
+  namespace: default
+spec:
+  ingressClassName: nginx              # 使用 nginx Ingress Controller（入口控制器）
+  rules:
+  - host: web.xoho.top                 # 访问域名
+    http:
+      paths:
+      - path: /                        # 匹配根路径
+        pathType: Prefix
+        backend:
+          service:
+            name: kgale-web-gitops-svc # 后端 Service（服务）
+            port:
+              number: 80               # Service（服务）端口
