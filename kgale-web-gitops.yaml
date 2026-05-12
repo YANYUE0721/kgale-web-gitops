@@ -17,7 +17,7 @@ spec:
       - operator: "Exists"              # 容忍 Taint（污点）
       containers:
       - name: kgale-web                 # Container（容器）名称
-        image: 172.16.11.142/library/kgale-web:v1  # Harbor（私有镜像仓库）镜像
+        image: 172.16.11.142/library/kgale-web:v2
         ports:
         - containerPort: 80             # 容器内部端口
 
