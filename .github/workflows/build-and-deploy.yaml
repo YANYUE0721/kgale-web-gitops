@@ -42,7 +42,7 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git pull --rebase origin main
           git add kgale-web-gitops.yaml
-          git commit -m "update image to ${IMAGE_TAG} [skip ci]" || echo "No changes to commit"
+          git diff --cached --quiet && echo "No changes to commit" && exit 0
+          git commit -m "update image to ${IMAGE_TAG} [skip ci]"
           git push
