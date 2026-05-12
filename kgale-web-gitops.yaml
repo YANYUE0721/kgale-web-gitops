@@ -2,35 +2,80 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: kgale-web-gitops
+  namespace: default
+  labels:
+    app: kgale-web-gitops
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: kgale-web-gitops
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
   template:
     metadata:
       labels:
         app: kgale-web-gitops
     spec:
-      nodeName: k8s-master              # 指定运行到 k8s-master 节点
-      tolerations:
-      - operator: "Exists"              # 容忍 Taint（污点）
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                - k8s-worker1
+                - k8s-worker2
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app: kgale-web-gitops
+            topologyKey: kubernetes.io/hostname
       containers:
-      - name: kgale-web                 # Container（容器）名称
+      - name: kgale-web
         image: 172.16.11.142/library/kgale-web:v7
+        imagePullPolicy: Always
         ports:
-        - containerPort: 80             # 容器内部端口
-
+        - name: http
+          containerPort: 80
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 3
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 10
+          periodSeconds: 20
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 200m
+            memory: 128Mi
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: kgale-web-gitops-svc
+  namespace: default
+  labels:
+    app: kgale-web-gitops
 spec:
-  type: NodePort                        # NodePort（节点端口）暴露
+  type: NodePort
   selector:
     app: kgale-web-gitops
   ports:
-  - port: 80                            # Service（服务）端口
-    targetPort: 80                      # Pod（容器组）端口
-    nodePort: 30084                     # 外部访问端口
+  - name: http
+    port: 80
+    targetPort: http
+    nodePort: 30084
