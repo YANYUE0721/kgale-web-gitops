@@ -1,9 +1,13 @@
-name: Build and Deploy to Harbor
+﻿name: Build and Deploy to Harbor
 
 on:
   push:
     branches:
       - main
+    paths:
+      - "index.html"
+      - "Dockerfile"
+      - ".github/workflows/build-and-deploy.yaml"
 
 permissions:
   contents: write
@@ -38,6 +42,7 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
+          git pull --rebase origin main
           git add kgale-web-gitops.yaml
           git commit -m "update image to ${IMAGE_TAG} [skip ci]" || echo "No changes to commit"
           git push
