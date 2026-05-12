@@ -1,12 +1,107 @@
-<!DOCTYPE html>
-<html>
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <title>Kgale CI/CD Demo</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Microsoft YaHei", Arial, sans-serif;
+      background: linear-gradient(135deg, #0f172a, #1e293b, #334155);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card {
+      width: 760px;
+      padding: 48px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(12px);
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 8px 18px;
+      border-radius: 999px;
+      background: rgba(34, 197, 94, 0.18);
+      color: #86efac;
+      font-size: 14px;
+      margin-bottom: 24px;
+      border: 1px solid rgba(134, 239, 172, 0.4);
+    }
+
+    h1 {
+      font-size: 36px;
+      margin: 0 0 18px;
+      letter-spacing: 1px;
+    }
+
+    .desc {
+      font-size: 18px;
+      color: #cbd5e1;
+      line-height: 1.8;
+      margin-bottom: 32px;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .item {
+      padding: 16px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #e2e8f0;
+      font-size: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .footer {
+      margin-top: 32px;
+      color: #94a3b8;
+      font-size: 14px;
+    }
+
+    .highlight {
+      color: #38bdf8;
+      font-weight: bold;
+    }
+  </style>
 </head>
-<body style="font-family: Arial; text-align: center; margin-top: 100px;">
-  <h1>Harbor + Kubernetes + GitHub Actions + ArgoCD + ChatGPT 部署成功！</h1>
-  <p>这是通过 CI/CD 自动构建并发布的页面。</p>
-  <p>镜像来自 Harbor 私有镜像仓库。</p>
+<body>
+  <div class="card">
+    <div class="badge">CI/CD Pipeline Online</div>
+
+    <h1>Kgale DevOps 发布平台</h1>
+
+    <div class="desc">
+      当前页面由 <span class="highlight">GitHub Actions</span> 自动构建，
+      镜像推送至 <span class="highlight">Harbor</span>，
+      再由 <span class="highlight">ArgoCD</span> 同步发布到
+      <span class="highlight">Kubernetes</span>。
+    </div>
+
+    <div class="flow">
+      <div class="item">GitHub<br>代码仓库</div>
+      <div class="item">Actions<br>自动构建</div>
+      <div class="item">Harbor<br>私有镜像仓库</div>
+      <div class="item">ArgoCD<br>GitOps 同步</div>
+      <div class="item">Kubernetes<br>容器运行平台</div>
+      <div class="item">Ingress + HTTPS<br>统一访问入口</div>
+    </div>
+
+    <div class="footer">
+      Built by Kgale · Powered by Kubernetes · Assisted by ChatGPT
+    </div>
+  </div>
 </body>
 </html>
