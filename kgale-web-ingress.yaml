@@ -5,6 +5,10 @@ metadata:
   namespace: default
 spec:
   ingressClassName: nginx              # 使用 nginx Ingress Controller（入口控制器）
+  tls:
+  - hosts:
+    - web.xoho.top                     # HTTPS 域名
+    secretName: web-xoho-top-tls       # TLS Secret（证书密钥）
   rules:
   - host: web.xoho.top                 # 访问域名
     http:
