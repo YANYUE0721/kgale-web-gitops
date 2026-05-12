@@ -1,0 +1,43 @@
+name: Build and Deploy to Harbor
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set image tag
+        run: |
+          echo "IMAGE_TAG=v${GITHUB_RUN_NUMBER}" >> $GITHUB_ENV
+          echo "IMAGE_NAME=172.16.11.142/library/kgale-web:v${GITHUB_RUN_NUMBER}" >> $GITHUB_ENV
+
+      - name: Build Docker image
+        run: |
+          docker build -t ${IMAGE_NAME} .
+
+      - name: Push Docker image to Harbor
+        run: |
+          docker push ${IMAGE_NAME}
+
+      - name: Update Kubernetes YAML image
+        run: |
+          sed -i "s#image: 172.16.11.142/library/kgale-web:.*#image: ${IMAGE_NAME}  # Harbor（私有镜像仓库）镜像#g" kgale-web-gitops.yaml
+
+      - name: Commit and push updated YAML
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add kgale-web-gitops.yaml
+          git commit -m "update image to ${IMAGE_TAG} [skip ci]" || echo "No changes to commit"
+          git push
